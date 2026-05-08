@@ -1,0 +1,9 @@
+{
+  "folders": [
+    { "path": "./front" },
+    { "path": "./back" }
+  ],
+  "settings": {
+    "commentTranslate.source": "Google"
+  }
+}
