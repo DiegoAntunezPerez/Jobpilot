@@ -1,4 +1,4 @@
-# JobPilot — Plataforma de búsqueda de empleo tech con IA
+# JobPilot — Plataforma de búsqueda de empleo con IA
 
 > Agrega ofertas de Adzuna, Tecnoempleo y Jobatus en tiempo real, con filtrado avanzado, seguimiento de candidaturas y análisis de encaje por Inteligencia Artificial.
 
