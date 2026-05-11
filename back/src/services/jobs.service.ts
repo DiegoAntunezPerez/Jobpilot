@@ -3,9 +3,9 @@ import { aggregateJobs, getSupportedPortals } from '../lib/aggregator'
 import { NormalizedJob, JobSearchResult, JobPortal } from '../types/job.types'
 import { createError } from '../middlewares/error.middleware'
 
-// Cache en memoria simple (30 seg por query)
+// Cache en memoria (5 min por query)
 const cache = new Map<string, { data: JobSearchResult; expiresAt: number }>()
-const CACHE_TTL = 30_000
+const CACHE_TTL = 300_000
 
 export const jobSearchQuerySchema = z.object({
   query: z.string().optional(),

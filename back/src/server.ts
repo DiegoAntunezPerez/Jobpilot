@@ -27,6 +27,11 @@ app.use(
   })
 )
 
+// ── Health check (fuera del rate limiter) ──────────────────
+app.get('/api/health', (_req, res) => {
+  res.json({ status: 'ok', env: env.NODE_ENV, ts: new Date().toISOString() })
+})
+
 const limiter = rateLimit({
   windowMs: Number(env.RATE_LIMIT_WINDOW_MS),
   max: Number(env.RATE_LIMIT_MAX),
@@ -47,10 +52,6 @@ app.use('/api/auth', authRoutes)
 app.use('/api/jobs', jobsRoutes)
 app.use('/api/applications', applicationsRoutes)
 app.use('/api/ai', aiRoutes)
-
-app.get('/api/health', (_req, res) => {
-  res.json({ status: 'ok', env: env.NODE_ENV, ts: new Date().toISOString() })
-})
 
 // ── Error handler global ───────────────────────────────────
 app.use(errorHandler)
