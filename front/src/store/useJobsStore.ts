@@ -19,6 +19,7 @@ interface JobsState {
   supportedPortals: string[]
   filters: JobSearchFilters
   isLoading: boolean
+  isWakingUp: boolean
   error: string | null
   selectedJob: Job | null
 
@@ -52,13 +53,17 @@ export const useJobsStore = create<JobsState>((set, get) => ({
   supportedPortals: [],
   filters: DEFAULT_FILTERS,
   isLoading: false,
+  isWakingUp: false,
   error: null,
   selectedJob: null,
 
   search: async (overrides) => {
     const searchId = ++currentSearchId
     const filters = { ...get().filters, ...overrides }
-    set({ isLoading: true, error: null, filters })
+    set({ isLoading: true, isWakingUp: false, error: null, filters })
+    const wakingTimer = setTimeout(() => {
+      if (searchId === currentSearchId) set({ isWakingUp: true })
+    }, 5000)
     try {
       const result: JobSearchResult = await jobsService.searchJobs(filters)
       if (searchId !== currentSearchId) return
@@ -75,7 +80,8 @@ export const useJobsStore = create<JobsState>((set, get) => ({
         err instanceof Error ? err.message : 'Error al buscar ofertas'
       set({ error: message, jobs: [] })
     } finally {
-      if (searchId === currentSearchId) set({ isLoading: false })
+      clearTimeout(wakingTimer)
+      if (searchId === currentSearchId) set({ isLoading: false, isWakingUp: false })
     }
   },
 

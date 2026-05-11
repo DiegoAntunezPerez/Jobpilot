@@ -4,12 +4,13 @@ import { JobCard } from '../components/JobCard/JobCard'
 import { JobCardSkeleton } from '../components/JobCard/JobCardSkeleton'
 import { Button } from '../components/UI/Button'
 import { useJobsStore } from '../store/useJobsStore'
-import { Frown } from 'lucide-react'
+import { Frown, ServerCrash } from 'lucide-react'
 
 export function HomePage() {
   const {
     jobs,
     isLoading,
+    isWakingUp,
     error,
     total,
     page,
@@ -51,11 +52,21 @@ export function HomePage() {
       )}
 
       {isLoading && jobs.length === 0 ? (
-        <div className='grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4'>
-          {Array.from({ length: 6 }).map((_, i) => (
-            <JobCardSkeleton key={i} />
-          ))}
-        </div>
+        <>
+          {isWakingUp && (
+            <div className='flex items-center gap-3 rounded-lg border border-violet-500/30 bg-violet-500/10 px-4 py-3 text-sm text-violet-300'>
+              <ServerCrash size={18} className='shrink-0 animate-pulse' />
+              <span>
+                El servidor está iniciando, puede tardar hasta un minuto la primera vez...
+              </span>
+            </div>
+          )}
+          <div className='grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4'>
+            {Array.from({ length: 6 }).map((_, i) => (
+              <JobCardSkeleton key={i} />
+            ))}
+          </div>
+        </>
       ) : jobs.length === 0 && !isLoading ? (
         <div className='text-center py-16'>
           <Frown className='mx-auto text-slate-600 mb-3' size={40} />

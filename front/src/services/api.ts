@@ -3,7 +3,7 @@ import axios from 'axios'
 const api = axios.create({
   baseURL: import.meta.env.VITE_API_URL ?? '/api',
   withCredentials: true,
-  timeout: 15000,
+  timeout: 65000,
   headers: { 'Content-Type': 'application/json' }
 })
 
@@ -33,6 +33,15 @@ api.interceptors.response.use(
   (response) => response,
   async (error) => {
     const originalRequest = error.config
+
+    // Retry once on timeout or network error (Render free tier cold start)
+    const isTimeout = error.code === 'ECONNABORTED' || error.message?.includes('timeout')
+    const isNetworkError = !error.response && error.code !== 'ERR_CANCELED'
+    const isGetRequest = !originalRequest.method || originalRequest.method.toLowerCase() === 'get'
+    if ((isTimeout || isNetworkError) && !originalRequest._retried && isGetRequest) {
+      originalRequest._retried = true
+      return api(originalRequest)
+    }
 
     if (error.response?.status === 401 && !originalRequest._retry) {
       if (isRefreshing) {
