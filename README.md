@@ -246,4 +246,5 @@ jobpilot/
 
 ---
 *Backend deployed on Render with uptime monitoring via UptimeRobot. Frontend Netlify*
+
 *Proyecto full-stack de nivel avanzado que cubre diseño de base de datos, API REST, integración de servicios externos, web scraping, autenticación segura y uso de LLMs como herramienta de valor añadido.*
